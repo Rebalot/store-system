@@ -1,0 +1,55 @@
+.card-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #a8a8a8 transparent;
+}
+.swiper-pagination{
+    bottom: 0;
+}
+.swiper-pagination-bullet {
+    width: 20px;
+    height: 6px;
+    border-radius: 2px;
+    color: #000;
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.2);
+  }
+  
+  .swiper-pagination-bullet-active {
+    color: #fff;
+    background: #000000;
+  }
+  .form-control:focus{
+    border-color: #818181;
+    box-shadow: 0 0 0 .25rem rgba(49, 49, 49, 0.25);
+  }
+  .grid-category{
+    display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(198px, 1fr)); /* Ajuste automático */
+  gap: 15px;
+  
+  }
+  .grid-catalog{
+    grid-template-columns: repeat(auto-fill, minmax(225px, 1fr)); 
+  }
+  .popover-body{
+    padding-top: 0.75rem !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+
+  }
+  .dropdown-item:active{
+    background-color: #cfcfcf;
+  }
+
+  @media (max-width: 768px) {
+    .filter-aside {
+      max-width: none !important;
+      padding-right: 1rem;
+    }
+  }
+  @media (max-width: 1150px) {
+
+    .grid-catalog{
+        padding-right: 1rem;
+    }
+  }

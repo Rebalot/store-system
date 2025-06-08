@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('./assets/fonts/Roboto/Roboto-Regular.ttf') format('truetype');
+}
+:root {
+  --font-family: "Roboto", sans-serif;
+  --bgcolor: #161b30;
+  --bgcolor-secondary: rgb(246,199,0);
+  --text-primary: #f7fafc;
+  --text-secondary: #c2c2c2;
+  --dark-primary: rgb(66, 66, 66);
+  --icon-primary: rgb(92, 90, 90);
+  --text-xs: clamp(.8rem, 1.25vw, .9rem);
+  --text-sm: clamp(1rem, 1.5vw, 1.1rem);
+  --text-base: clamp(1.2rem, 1.75vw, 1.6rem);
+  --text-lg: clamp(1.4rem, 2vw, 2rem);
+  --text-xl: clamp(1.6rem, 2.25vw, 2.4rem);
+  --text-2xl: clamp(1.8rem, 2.5vw, 2.8rem);
+  --text-3xl: clamp(2rem, 3vw, 3.2rem);
+  --text-4xl: clamp(2.2rem, 3.5vw, 3.6rem);
+  --text-5xl: clamp(2.4rem, 4vw, 4rem);
+  --text-6xl: clamp(2.6rem, 4.5vw, 4.4rem);
+  --text-7xl: clamp(2.8rem, 5vw, 4.8rem);
+  --bs-dropdown-link-active-bg: #3f3f3f;
+}
+*{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  scroll-behavior: smooth;
+}
+/* body{
+  background-color: var(--bgcolor);
+  min-height: 100vh;
+  color: var(--text-primary);
+  overflow-x: hidden;
+  font-family: var(--font-family);
+}
+p{
+  line-height: 1.8rem;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-bottom: .5rem;
+} */

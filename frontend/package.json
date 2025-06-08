@@ -1,0 +1,52 @@
+{
+  "name": "store-frontend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 3100",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^7.1.0",
+    "bootstrap": "^5.3.3",
+    "lucide-react": "^0.452.0",
+    "react": "^18.3.1",
+    "react-bootstrap": "^2.10.5",
+    "react-content-loader": "^7.0.2",
+    "react-dom": "^18.3.1",
+    "react-responsive": "^10.0.1",
+    "react-router-dom": "^6.27.0",
+    "react-slick": "^0.30.2",
+    "swiper": "^11.1.14",
+    "swr": "^2.3.3"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.25.7",
+    "@babel/preset-react": "^7.25.7",
+    "@eslint/js": "^9.11.1",
+    "@tailwindcss/line-clamp": "^0.4.4",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
+    "@types/react": "^18.3.10",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "autoprefixer": "^10.4.20",
+    "eslint": "^9.11.1",
+    "eslint-plugin-react": "^7.37.0",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.12",
+    "globals": "^15.9.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.13",
+    "vite": "^6.3.5"
+  }
+}
