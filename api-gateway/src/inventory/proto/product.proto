@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package product;
+
+service ProductService {
+  rpc GetPaginatedProducts (QueryParams) returns (Products);
+  rpc CreateProduct (ProductPayload) returns (Product);
+  rpc UpdateProduct (Product) returns (Product);
+  rpc DeleteProduct (Id) returns (DeleteResponse);
+  rpc GetProductsByIds (GetProductsRequest) returns (GetProductsResponse);
+  rpc UpdateStockBulk (UpdateStockRequest) returns (UpdateStockResponse);
+  rpc GetProductsBulk (ProductsBulkRequest) returns (ProductsBulkResponse);
+}
+
+message ProductPayload {
+  string name = 1;
+  string category = 2;
+  float price = 3;
+  int32 stock = 4;
+  string sku = 5;
+  string image = 6;
+  string description = 7;
+}
+
+message Product {
+  string id = 1;
+  string name = 2;
+  string category = 3;
+  float price = 4;
+  int32 stock = 5;
+  string sku = 6;
+  string image = 7;
+  string description = 8;
+}
+
+message QueryParams {
+  int32 page = 1;
+  int32 limit = 2;
+  string search = 3;
+  string status = 4;
+  string category = 5;
+}
+
+message Products {
+  repeated Product items = 1;
+  int32 total_items = 2;
+  int32 total_pages = 3;
+  int32 current_page = 4;
+}
+
+message Id {
+  string id = 1;
+}
+
+message DeleteResponse {
+  string message = 1;
+}
+message GetProductsRequest {
+  repeated string ids = 1;
+}
+
+message GetProductsResponse {
+  repeated Product products = 1;
+}
+
+message UpdateStockRequest {
+  repeated StockUpdate items = 1;
+}
+
+message StockUpdate {
+  string product_id = 1;
+  int32 quantity = 2;
+}
+
+message UpdateStockResponse {
+  bool success = 1;
+}
+
+message ProductsBulkRequest {
+  int32 limit = 1;
+}
+
+message ProductsBulkResponse {
+  repeated Product products = 1;
+}

@@ -20,6 +20,18 @@ import { join } from "path";
           },
         }),
         inject: [ConfigService],
+      },
+      {
+        name: 'INVENTORY_PACKAGE',
+        useFactory: async (configService: ConfigService) => ({
+          transport: Transport.GRPC,
+          options: {
+            package: 'product',
+            protoPath: join(__dirname, '../../../src/inventory/proto/product.proto'),
+            url: `localhost:${configService.get<string>('GRPC_INVENTORY_PORT') || '50051'}`,
+          },
+        }),
+        inject: [ConfigService],
       }
     ]),
   ],
