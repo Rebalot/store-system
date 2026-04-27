@@ -4,122 +4,151 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import { Link, useNavigate } from 'react-router-dom';
-import { fetchCategorias } from '../services/faketstoreApi';
-import { useEffect, useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useState, useRef } from 'react';
 import AuthModal from './AuthModal';
 import { useAuth } from '../contexts/AuthContext';
-import { Avatar }from '@mui/material';
-import { Dropdown } from 'react-bootstrap';
+import { Avatar } from '@mui/material';
 import { useMediaQuery } from 'react-responsive';
+import { CATEGORIES } from '../utils/constants';
 
-const expand = 'md'
+const expand = 'md';
+
 export default function NavbarComponent() {
   const isMdOrLarger = useMediaQuery({ query: '(min-width: 768px)' });
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [categoriasData, setCategoriasData] = useState();
+  const location = useLocation();
   const [navbarExpanded, setNavbarExpanded] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const searchTimeout = useRef(null);
   const { user } = useAuth();
 
-  const handleNavbarToggle = () => {
-    setNavbarExpanded(!navbarExpanded);
-  };
+  // Sync search input when navigating back to catalog with existing search state
   useEffect(() => {
-      if (isMdOrLarger) {
-        setNavbarExpanded(false); // cierra si es md o más
-      }
-    }, [isMdOrLarger]);
-
-  useEffect(() => {
-    async function loadAllData() {
-      try {
-        const categorias = await fetchCategorias();
-
-        // console.log("categorias: ", categorias);
-
-        setCategoriasData(categorias);
-
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
+    if (location.state?.search !== undefined) {
+      setSearchValue(location.state.search);
     }
-    loadAllData();
-  }, []);
-  
+  }, [location.state?.search]);
+
+  useEffect(() => {
+    if (isMdOrLarger) setNavbarExpanded(false);
+  }, [isMdOrLarger]);
+
+  const handleSearchInput = (e) => {
+    const value = e.target.value;
+    setSearchValue(value);
+    clearTimeout(searchTimeout.current);
+    searchTimeout.current = setTimeout(() => {
+      navigate('/catalog', {
+        state: {
+          ...location.state, // preserve active category if any
+          search: value,
+        },
+      });
+    }, 400);
+  };
+
+  const handleCategoryClick = (category) => {
+    setSearchValue(''); // clear search when switching category
+    navigate('/catalog', {
+      state: { category },
+    });
+  };
+
   return (
     <>
-
-        <Navbar key={expand} expand={expand} expanded={navbarExpanded}  onToggle={handleNavbarToggle} 
+      <Navbar
+        key={expand}
+        expand={expand}
+        expanded={navbarExpanded}
+        onToggle={() => setNavbarExpanded(!navbarExpanded)}
         fixed="top"
-        className="bg-white shadow-sm mx-auto px-6 py-3">
-          <Container fluid>
-            <Navbar.Brand as={Link} to={"/"} className='text-2xl font-bold'><span>My</span><span className='text-gray-500'>Store</span></Navbar.Brand>
-            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
-            <Navbar.Offcanvas
-              id={`offcanvasNavbar-expand-${expand}`}
-              aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
-              placement="end"
-              className="w-50"
-            >
-              <Offcanvas.Header closeButton>
-                <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`} className='text-2xl font-bold'>
-                <span>My</span><span className='text-gray-500'>Store</span>
-                </Offcanvas.Title>
-              </Offcanvas.Header>
-              <Offcanvas.Body>
-                <Nav className="flex justify-end flex-grow-1 items-start gap-2 pe-3 md:pe-0">
+        className="bg-white shadow-sm mx-auto px-6 py-3"
+      >
+        <Container fluid>
+          <Navbar.Brand as={Link} to="/" className="text-2xl font-bold">
+            <span>My</span><span className="text-gray-500">Store</span>
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
+          <Navbar.Offcanvas
+            id={`offcanvasNavbar-expand-${expand}`}
+            aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
+            placement="end"
+            className="w-50"
+          >
+            <Offcanvas.Header closeButton>
+              <Offcanvas.Title
+                id={`offcanvasNavbarLabel-expand-${expand}`}
+                className="text-2xl font-bold"
+              >
+                <span>My</span><span className="text-gray-500">Store</span>
+              </Offcanvas.Title>
+            </Offcanvas.Header>
+            <Offcanvas.Body>
+              <Nav className="flex justify-end flex-grow-1 items-start gap-2 pe-3 md:pe-0">
+
+                {/* Search */}
                 <Form className={`${isMdOrLarger ? "flex" : "w-full"}`}>
                   <Form.Control
                     type="search"
                     placeholder="Find products..."
                     aria-label="Search"
+                    value={searchValue}
+                    onChange={handleSearchInput}
                   />
                 </Form>
-                { user ? (
-                  <NavDropdown id={`offcanvasNavbarDropdown-expand-${expand}`} title="Profile" className='pl-2 md:pl-0 md:ml-5 w-full md:w-auto'>
-                    <NavDropdown.Item as={Link} to={`/profile/${user.id}`} className='flex gap-2'>
-                      <Avatar alt={"User avatar"} sx={{ width: 32, height: 32 }} src={user.avatar} />
+
+                {/* Auth */}
+                {user ? (
+                  <NavDropdown
+                    id={`offcanvasNavbarDropdown-expand-${expand}`}
+                    title="Profile"
+                    className="pl-2 md:pl-0 md:ml-5 w-full md:w-auto"
+                  >
+                    <NavDropdown.Item as={Link} to={`/profile/${user.id}`} className="flex gap-2">
+                      <Avatar alt="User avatar" sx={{ width: 32, height: 32 }} src={user.avatar} />
                       Profile
                     </NavDropdown.Item>
                   </NavDropdown>
                 ) : (
                   <>
-                    <Nav.Link onClick={() => setModalIsOpen(true)} className='pl-2 md:pl-0 md:ml-5 w-full md:w-auto'>Account</Nav.Link>
+                    <Nav.Link
+                      onClick={() => setModalIsOpen(true)}
+                      className="pl-2 md:pl-0 md:ml-5 w-full md:w-auto"
+                    >
+                      Account
+                    </Nav.Link>
                     <AuthModal
                       isOpen={modalIsOpen}
                       onClose={() => setModalIsOpen(false)}
                     />
                   </>
                 )}
-                
+
+                {/* Catalog dropdown */}
                 <NavDropdown
                   title="Catalog"
-                  id={`offcanvasNavbarDropdown-expand-${expand}`}
-                  className='pl-2 w-full md:w-auto'
+                  id={`offcanvasNavbarDropdown-catalog-${expand}`}
+                  className="pl-2 w-full md:w-auto"
                 >
-                  {loading ? (
-                    <></>
-                  ) : (
-                    categoriasData.length > 0 &&
-                    categoriasData.slice(0, 5).map((category, i) => (
-                      <NavDropdown.Item key={category.name} onClick={() =>
-                          navigate(`${category.navlink}`, { state: { id: category.id } })
-                        } >{category.name}</NavDropdown.Item>
-                    ))
-                  )}
+                  {CATEGORIES.map((cat) => (
+                    <NavDropdown.Item
+                      key={cat.value}
+                      onClick={() => handleCategoryClick(cat.value)}
+                    >
+                      {cat.label}
+                    </NavDropdown.Item>
+                  ))}
                 </NavDropdown>
 
-                  <Nav.Link as={Link} to={`/cart`} className='pl-2'>Cart</Nav.Link>
-                </Nav>
-                
-              </Offcanvas.Body>
-            </Navbar.Offcanvas>
-          </Container>
-        </Navbar>
+                <Nav.Link as={Link} to="/cart" className="pl-2">Cart</Nav.Link>
+
+              </Nav>
+            </Offcanvas.Body>
+          </Navbar.Offcanvas>
+        </Container>
+      </Navbar>
     </>
   );
 }

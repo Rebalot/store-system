@@ -3,15 +3,23 @@ import { Badge, Button, OverlayTrigger, Spinner, Tooltip } from "react-bootstrap
 import { useCart } from "../contexts/CartContext";
 
 export default function ProductsList({ products, handlePopoverOpen, loading }) {
-  const { addToCart }= useCart()
+  const { addToCart } = useCart();
 
   if (loading) {
-  return (
-    <div className="w-full flex justify-center items-center py-12">
-      <Spinner/>
-      <span className="text-lg font-semibold ml-6">Cargando productos...</span>
-    </div>
-  );
+    return (
+      <div className="w-full flex justify-center items-center py-12">
+        <Spinner />
+        <span className="text-lg font-semibold ml-6">Loading products...</span>
+      </div>
+    );
+  }
+
+  if (products.length === 0) {
+    return (
+      <div className="w-full flex justify-center items-center py-12">
+        <p className="text-gray-500 text-lg">No products found.</p>
+      </div>
+    );
   }
 
   return (
@@ -24,30 +32,30 @@ export default function ProductsList({ products, handlePopoverOpen, loading }) {
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
             <NavLink to={`/producto/${product.id}`}>
               <img
-                src={product.images}
-                alt={product.title}
-                className="w-full h-auto object-contain"
+                src={product.image}
+                alt={product.name}
+                className="w-full h-48 object-cover"
               />
             </NavLink>
 
             <div className="p-4">
               <NavLink to={`/producto/${product.id}`}>
                 <OverlayTrigger
-                placement="top"
-                overlay={
-                  <Tooltip id="tooltip-top">
-                    {product.title}
-                  </Tooltip>
-                }
+                  placement="top"
+                  overlay={<Tooltip id={`tooltip-${product.id}`}>{product.name}</Tooltip>}
                 >
-                  <h3 className="text-[1.10rem] font-semibold mb-2 truncate">{product.title}</h3>
+                  <h3 className="text-[1.10rem] font-semibold mb-2 truncate">{product.name}</h3>
                 </OverlayTrigger>
               </NavLink>
 
               <div className="flex flex-col">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-gray-900 text-[1.50rem] font-semibold">${product.price.toFixed(2)}</span>
-                  <Badge pill bg="secondary" className="py-1">Category</Badge>
+                  <span className="text-gray-900 text-[1.50rem] font-semibold">
+                    ${product.price.toFixed(2)}
+                  </span>
+                  <Badge pill bg="secondary" className="py-1">
+                    {product.category.charAt(0) + product.category.slice(1).toLowerCase()}
+                  </Badge>
                 </div>
                 <p className="text-gray-600 line-clamp-2 mb-3 text-sm">{product.description}</p>
                 <Button

@@ -13,5 +13,5 @@ export class ProductController {
     const products = await this.productService.getProducts(query);
     return products;
   }
-
+  
 }
